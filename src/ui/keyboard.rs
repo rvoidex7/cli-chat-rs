@@ -1,5 +1,5 @@
-use crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
 use crate::config::ShortcutConfig;
+use crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
 
 /// Application actions that can be triggered by keyboard shortcuts
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -76,7 +76,10 @@ impl KeyboardHandler {
             (self.config.prev_chat.clone(), "Previous chat".to_string()),
             (self.config.send_message.clone(), "Send message".to_string()),
             (self.config.search.clone(), "Search".to_string()),
-            (self.config.toggle_sidebar.clone(), "Toggle sidebar".to_string()),
+            (
+                self.config.toggle_sidebar.clone(),
+                "Toggle sidebar".to_string(),
+            ),
             (self.config.scroll_up.clone(), "Scroll up".to_string()),
             (self.config.scroll_down.clone(), "Scroll down".to_string()),
         ]

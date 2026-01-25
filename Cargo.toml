@@ -24,3 +24,15 @@ dirs = "5.0"
 [[bin]]
 name = "cli-chat"
 path = "src/main.rs"
+
+[[example]]
+name = "custom_adapter"
+path = "examples/custom_adapter.rs"
+
+[[example]]
+name = "demo_adapter"
+path = "examples/demo_adapter.rs"
+
+[[example]]
+name = "demo_standalone"
+path = "examples/demo_standalone.rs"

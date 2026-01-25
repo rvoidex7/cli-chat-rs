@@ -1,8 +1,8 @@
 // Example: Simple custom adapter implementation
 use async_trait::async_trait;
 use cli_chat_rs::{
-    MessagingAdapter, AdapterResult, Message, Chat, Contact,
-    MessageContent, ConnectionStatus, ChatId, ContactId, MessageId,
+    AdapterResult, Chat, ChatId, ConnectionStatus, Contact, ContactId, Message, MessageContent,
+    MessageId, MessagingAdapter,
 };
 use tokio::sync::mpsc;
 
@@ -48,12 +48,20 @@ impl MessagingAdapter for CustomAdapter {
         Ok(vec![])
     }
 
-    async fn send_message(&mut self, chat_id: &ChatId, content: MessageContent) -> AdapterResult<Message> {
+    async fn send_message(
+        &mut self,
+        chat_id: &ChatId,
+        content: MessageContent,
+    ) -> AdapterResult<Message> {
         println!("Sending message to {}: {:?}", chat_id, content);
         Err("Not implemented".into())
     }
 
-    async fn mark_as_read(&mut self, _chat_id: &ChatId, _message_id: &MessageId) -> AdapterResult<()> {
+    async fn mark_as_read(
+        &mut self,
+        _chat_id: &ChatId,
+        _message_id: &MessageId,
+    ) -> AdapterResult<()> {
         Ok(())
     }
 

@@ -1,8 +1,8 @@
+use crate::adapter::{AdapterResult, MessagingAdapter};
+use crate::types::*;
 use async_trait::async_trait;
 use chrono::Utc;
 use tokio::sync::mpsc;
-use crate::adapter::{AdapterResult, MessagingAdapter};
-use crate::types::*;
 
 /// Demo adapter for testing and demonstration purposes
 /// This shows how to implement a messaging adapter
@@ -90,7 +90,8 @@ impl MessagingAdapter for DemoAdapter {
     }
 
     async fn get_messages(&self, chat_id: &ChatId, limit: usize) -> AdapterResult<Vec<Message>> {
-        let messages: Vec<Message> = self.messages
+        let messages: Vec<Message> = self
+            .messages
             .iter()
             .filter(|m| &m.chat_id == chat_id)
             .take(limit)
@@ -99,7 +100,11 @@ impl MessagingAdapter for DemoAdapter {
         Ok(messages)
     }
 
-    async fn send_message(&mut self, chat_id: &ChatId, content: MessageContent) -> AdapterResult<Message> {
+    async fn send_message(
+        &mut self,
+        chat_id: &ChatId,
+        content: MessageContent,
+    ) -> AdapterResult<Message> {
         let message = Message {
             id: format!("msg_{}", self.messages.len()),
             chat_id: chat_id.clone(),
@@ -113,7 +118,11 @@ impl MessagingAdapter for DemoAdapter {
         Ok(message)
     }
 
-    async fn mark_as_read(&mut self, _chat_id: &ChatId, _message_id: &MessageId) -> AdapterResult<()> {
+    async fn mark_as_read(
+        &mut self,
+        _chat_id: &ChatId,
+        _message_id: &MessageId,
+    ) -> AdapterResult<()> {
         Ok(())
     }
 
@@ -129,7 +138,9 @@ impl MessagingAdapter for DemoAdapter {
         Ok(self.contacts.clone())
     }
 
-    async fn subscribe_to_messages(&mut self) -> AdapterResult<tokio::sync::mpsc::Receiver<Message>> {
+    async fn subscribe_to_messages(
+        &mut self,
+    ) -> AdapterResult<tokio::sync::mpsc::Receiver<Message>> {
         let (_tx, rx) = mpsc::channel(100);
         // In a real adapter, tx would be used to send incoming messages
         Ok(rx)
@@ -137,7 +148,8 @@ impl MessagingAdapter for DemoAdapter {
 
     async fn search(&self, query: &str) -> AdapterResult<Vec<Chat>> {
         let query_lower = query.to_lowercase();
-        let results: Vec<Chat> = self.chats
+        let results: Vec<Chat> = self
+            .chats
             .iter()
             .filter(|chat| chat.name.to_lowercase().contains(&query_lower))
             .cloned()

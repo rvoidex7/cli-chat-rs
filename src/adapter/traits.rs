@@ -1,6 +1,6 @@
-use async_trait::async_trait;
-use crate::types::*;
 use super::AdapterResult;
+use crate::types::*;
+use async_trait::async_trait;
 
 /// Core trait that all messaging service adapters must implement
 /// This allows the CLI to work with any messaging service
@@ -25,10 +25,15 @@ pub trait MessagingAdapter: Send + Sync {
     async fn get_messages(&self, chat_id: &ChatId, limit: usize) -> AdapterResult<Vec<Message>>;
 
     /// Send a text message to a chat
-    async fn send_message(&mut self, chat_id: &ChatId, content: MessageContent) -> AdapterResult<Message>;
+    async fn send_message(
+        &mut self,
+        chat_id: &ChatId,
+        content: MessageContent,
+    ) -> AdapterResult<Message>;
 
     /// Mark a message as read
-    async fn mark_as_read(&mut self, chat_id: &ChatId, message_id: &MessageId) -> AdapterResult<()>;
+    async fn mark_as_read(&mut self, chat_id: &ChatId, message_id: &MessageId)
+        -> AdapterResult<()>;
 
     /// Get contact information
     async fn get_contact(&self, contact_id: &ContactId) -> AdapterResult<Contact>;
@@ -37,7 +42,9 @@ pub trait MessagingAdapter: Send + Sync {
     async fn get_contacts(&self) -> AdapterResult<Vec<Contact>>;
 
     /// Listen for incoming messages (returns a receiver for new messages)
-    async fn subscribe_to_messages(&mut self) -> AdapterResult<tokio::sync::mpsc::Receiver<Message>>;
+    async fn subscribe_to_messages(
+        &mut self,
+    ) -> AdapterResult<tokio::sync::mpsc::Receiver<Message>>;
 
     /// Search for messages or chats
     async fn search(&self, query: &str) -> AdapterResult<Vec<Chat>>;
@@ -47,8 +54,14 @@ pub trait MessagingAdapter: Send + Sync {
 #[derive(Debug, Clone)]
 pub enum AdapterEvent {
     MessageReceived(Message),
-    MessageStatusChanged { message_id: MessageId, status: MessageStatus },
-    ContactStatusChanged { contact_id: ContactId, is_online: bool },
+    MessageStatusChanged {
+        message_id: MessageId,
+        status: MessageStatus,
+    },
+    ContactStatusChanged {
+        contact_id: ContactId,
+        is_online: bool,
+    },
     ConnectionStatusChanged(ConnectionStatus),
     Error(String),
 }

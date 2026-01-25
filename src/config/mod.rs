@@ -1,7 +1,7 @@
+use anyhow::Result;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::path::PathBuf;
-use anyhow::Result;
 
 /// Main configuration for the messenger CLI
 #[derive(Debug, Clone, Serialize, Deserialize)]

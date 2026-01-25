@@ -26,11 +26,27 @@ pub struct Message {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum MessageContent {
     Text(String),
-    Image { path: String, caption: Option<String> },
-    Video { path: String, caption: Option<String> },
-    Audio { path: String, duration_secs: Option<u32> },
-    Document { path: String, filename: String },
-    Location { latitude: f64, longitude: f64, name: Option<String> },
+    Image {
+        path: String,
+        caption: Option<String>,
+    },
+    Video {
+        path: String,
+        caption: Option<String>,
+    },
+    Audio {
+        path: String,
+        duration_secs: Option<u32>,
+    },
+    Document {
+        path: String,
+        filename: String,
+    },
+    Location {
+        latitude: f64,
+        longitude: f64,
+        name: Option<String>,
+    },
 }
 
 /// Message delivery/read status

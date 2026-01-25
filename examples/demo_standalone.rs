@@ -1,4 +1,5 @@
-use cli_chat_rs::{Action, Config, DemoAdapter, KeyboardHandler, MessengerApp};
+// Standalone demo application for testing UI with mock data
+use cli_chat_rs::{Config, DemoAdapter, MessengerApp};
 use crossterm::{
     event::{self, Event, KeyCode},
     execute,
@@ -23,23 +24,14 @@ enum ActiveScreen {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // Initialize logging
-    tracing_subscriber::fmt::init();
+    println!("CLI Chat RS - Demo Application");
+    println!("This is a standalone demo with mock data for UI testing");
+    println!("Press Enter to continue...");
+    let mut input = String::new();
+    std::io::stdin().read_line(&mut input)?;
 
-    // Load configuration
-    let config_path = std::env::var("CLI_CHAT_CONFIG").unwrap_or_else(|_| {
-        dirs::home_dir()
-            .unwrap_or_else(|| std::path::PathBuf::from("."))
-            .join(".cli-chat-rs")
-            .join("config.json")
-            .to_string_lossy()
-            .to_string()
-    });
-
-    let config =
-        Config::load(&std::path::PathBuf::from(&config_path)).unwrap_or_else(|_| Config::default());
-
-    // Create demo adapter (in a real app, this would be selected based on config)
+    // Initialize demo application
+    let config = Config::default();
     let adapter = Box::new(DemoAdapter::new());
     let mut app = MessengerApp::new(config, adapter);
 
@@ -48,8 +40,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     app.adapter_mut()
         .connect()
         .await
-        .map_err(|e| format!("Connection error: {}", e))?;
-    println!("Connected!");
+        .map_err(|e| format!("Failed to connect: {}", e))?;
+    println!("Connected successfully!");
 
     // Setup terminal
     enable_raw_mode()?;
@@ -58,29 +50,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let backend = CrosstermBackend::new(stdout);
     let mut terminal = Terminal::new(backend)?;
 
-    // Create keyboard handler
-    let keyboard_handler = KeyboardHandler::new(app.config().shortcuts.clone());
+    // Initialize keyboard handler
+    let mut keyboard_handler = cli_chat_rs::KeyboardHandler::new();
 
-    // Run the UI
-    let result = run_ui(&mut terminal, &mut app, &keyboard_handler).await;
-
-    // Restore terminal
-    disable_raw_mode()?;
-    execute!(terminal.backend_mut(), LeaveAlternateScreen)?;
-    terminal.show_cursor()?;
-
-    if let Err(err) = result {
-        eprintln!("Error: {:?}", err);
-    }
-
-    Ok(())
-}
-
-async fn run_ui(
-    terminal: &mut Terminal<CrosstermBackend<io::Stdout>>,
-    app: &mut MessengerApp,
-    keyboard_handler: &KeyboardHandler,
-) -> Result<(), Box<dyn std::error::Error>> {
+    // UI state
     let mut selected_chat = 0;
     let mut input_message = String::new();
     let mut show_help = false;
@@ -91,11 +64,7 @@ async fn run_ui(
 
     loop {
         // Get chats
-        let chats = app
-            .adapter()
-            .get_chats()
-            .await
-            .map_err(|e| format!("Failed to get chats: {}", e))?;
+        let chats = app.adapter().get_chats().await.unwrap_or_default();
 
         terminal.draw(|f| {
             let size = f.size();
@@ -109,7 +78,7 @@ async fn run_ui(
                         3
                     } else {
                         0
-                    }), // Input (hide in chat list on mobile)
+                    }), // Input
                     Constraint::Length(1), // Status bar
                 ])
                 .split(size);
@@ -251,13 +220,13 @@ async fn run_ui(
                 }
 
                 match action {
-                    Action::Quit => break,
-                    Action::NextChat => {
+                    cli_chat_rs::Action::Quit => break,
+                    cli_chat_rs::Action::NextChat => {
                         if !chats.is_empty() {
                             selected_chat = (selected_chat + 1) % chats.len();
                         }
                     }
-                    Action::PrevChat => {
+                    cli_chat_rs::Action::PrevChat => {
                         if !chats.is_empty() {
                             selected_chat = if selected_chat == 0 {
                                 chats.len() - 1
@@ -266,7 +235,7 @@ async fn run_ui(
                             };
                         }
                     }
-                    Action::SendMessage => {
+                    cli_chat_rs::Action::SendMessage => {
                         // On mobile, Enter on ChatList enters the chat
                         if is_mobile && active_screen == ActiveScreen::ChatList {
                             active_screen = ActiveScreen::ChatView;
@@ -279,7 +248,6 @@ async fn run_ui(
                             input_message.clear();
                         }
                     }
-                    _ => {}
                 }
 
                 // Handle text input
@@ -301,6 +269,15 @@ async fn run_ui(
             }
         }
     }
+
+    // Restore terminal
+    disable_raw_mode()?;
+    execute!(terminal.backend_mut(), LeaveAlternateScreen)?;
+    terminal.show_cursor()?;
+
+    // Disconnect
+    app.adapter_mut().disconnect().await?;
+    println!("Demo completed. Thank you for testing CLI Chat RS!");
 
     Ok(())
 }

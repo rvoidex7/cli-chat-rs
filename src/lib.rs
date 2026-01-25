@@ -1,10 +1,12 @@
 pub mod adapter;
 pub mod config;
+pub mod demo_adapter;
 pub mod types;
 pub mod ui;
 
-pub use adapter::{MessagingAdapter, AdapterResult, DemoAdapter};
+pub use adapter::{AdapterResult, MessagingAdapter};
 pub use config::Config;
+pub use demo_adapter::DemoAdapter;
 pub use types::*;
 pub use ui::{Action, KeyboardHandler};
 
