@@ -153,7 +153,7 @@ async fn main() {
     let config = Config::default();
     let adapter = Box::new(YourAdapter::new());
     let mut app = MessengerApp::new(config, adapter);
-    
+
     app.adapter_mut().connect().await.unwrap();
     // Use the app...
 }

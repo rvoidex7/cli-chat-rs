@@ -8,13 +8,13 @@ use anyhow::Result;
 pub struct Config {
     /// Active adapter to use
     pub active_adapter: String,
-    
+
     /// Adapter-specific configurations
     pub adapters: HashMap<String, AdapterConfig>,
-    
+
     /// UI/Keyboard shortcuts configuration
     pub shortcuts: ShortcutConfig,
-    
+
     /// General application settings
     pub app: AppConfig,
 }
@@ -24,7 +24,7 @@ pub struct Config {
 pub struct AdapterConfig {
     /// Whether this adapter is enabled
     pub enabled: bool,
-    
+
     /// Adapter-specific settings (flexible for different adapters)
     pub settings: HashMap<String, serde_json::Value>,
 }
@@ -66,10 +66,10 @@ impl Default for ShortcutConfig {
 pub struct AppConfig {
     /// Path to store application data
     pub data_dir: PathBuf,
-    
+
     /// Log level
     pub log_level: String,
-    
+
     /// Maximum messages to load per chat
     pub messages_per_chat: usize,
 }
@@ -119,4 +119,3 @@ impl Config {
         Ok(())
     }
 }
-

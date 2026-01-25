@@ -67,9 +67,9 @@ impl MessagingAdapter for MyMessengerAdapter {
     async fn connect(&mut self) -> AdapterResult<()> {
         // Initialize connection to your service
         self.status = ConnectionStatus::Connecting;
-        
+
         // Your connection logic here
-        
+
         self.status = ConnectionStatus::Connected;
         Ok(())
     }
@@ -116,10 +116,10 @@ impl MessagingAdapter for MyMessengerAdapter {
 
     async fn subscribe_to_messages(&mut self) -> AdapterResult<mpsc::Receiver<Message>> {
         let (tx, rx) = mpsc::channel(100);
-        
+
         // Set up listener for incoming messages
         // spawn a task that listens and sends to tx
-        
+
         Ok(rx)
     }
 

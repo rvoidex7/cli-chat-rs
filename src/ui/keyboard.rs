@@ -36,34 +36,34 @@ impl KeyboardHandler {
             // Ctrl+Q - Quit
             (KeyCode::Char('q'), KeyModifiers::CONTROL) => Action::Quit,
             (KeyCode::Char('Q'), KeyModifiers::CONTROL) => Action::Quit,
-            
+
             // Ctrl+N - Next chat
             (KeyCode::Char('n'), KeyModifiers::CONTROL) => Action::NextChat,
             (KeyCode::Char('N'), KeyModifiers::CONTROL) => Action::NextChat,
-            
+
             // Ctrl+P - Previous chat
             (KeyCode::Char('p'), KeyModifiers::CONTROL) => Action::PrevChat,
             (KeyCode::Char('P'), KeyModifiers::CONTROL) => Action::PrevChat,
-            
+
             // Enter - Send message
             (KeyCode::Enter, KeyModifiers::NONE) => Action::SendMessage,
-            
+
             // Ctrl+F - Search
             (KeyCode::Char('f'), KeyModifiers::CONTROL) => Action::Search,
             (KeyCode::Char('F'), KeyModifiers::CONTROL) => Action::Search,
-            
+
             // Ctrl+L - Toggle sidebar
             (KeyCode::Char('l'), KeyModifiers::CONTROL) => Action::ToggleSidebar,
             (KeyCode::Char('L'), KeyModifiers::CONTROL) => Action::ToggleSidebar,
-            
+
             // Arrow keys - Scroll
             (KeyCode::Up, KeyModifiers::NONE) => Action::ScrollUp,
             (KeyCode::Down, KeyModifiers::NONE) => Action::ScrollDown,
-            
+
             // Page Up/Down
             (KeyCode::PageUp, KeyModifiers::NONE) => Action::PageUp,
             (KeyCode::PageDown, KeyModifiers::NONE) => Action::PageDown,
-            
+
             _ => Action::None,
         }
     }

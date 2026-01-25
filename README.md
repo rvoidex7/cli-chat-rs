@@ -73,12 +73,12 @@ pub struct YourAdapter { /* ... */ }
 #[async_trait]
 impl MessagingAdapter for YourAdapter {
     fn name(&self) -> &str { "Your Service" }
-    
+
     async fn connect(&mut self) -> AdapterResult<()> {
         // Connect to your service
         Ok(())
     }
-    
+
     // Implement other required methods...
 }
 ```

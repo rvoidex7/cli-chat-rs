@@ -82,20 +82,20 @@ async fn main() {
     let config = Config::default();
     let adapter = Box::new(CustomAdapter::new());
     let mut app = MessengerApp::new(config, adapter);
-    
+
     println!("Using adapter: {}", app.adapter().name());
-    
+
     if let Err(e) = app.adapter_mut().connect().await {
         eprintln!("Connection error: {}", e);
         return;
     }
     println!("Connected!");
-    
+
     match app.adapter().get_chats().await {
         Ok(chats) => println!("Chats: {:?}", chats),
         Err(e) => eprintln!("Error getting chats: {}", e),
     }
-    
+
     if let Err(e) = app.adapter_mut().disconnect().await {
         eprintln!("Disconnect error: {}", e);
         return;
