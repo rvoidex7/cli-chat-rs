@@ -31,6 +31,14 @@ cargo build --release
 cargo run --release
 ```
 
+### Run Standalone Demo
+
+To test the UI with mock data without full application setup:
+
+```bash
+cargo run --example demo_standalone
+```
+
 ## Integration Methods
 
 ### As a Submodule

@@ -32,6 +32,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Initialize demo application
     let config = Config::default();
+    let shortcut_config = config.shortcuts.clone();
     let adapter = Box::new(DemoAdapter::new());
     let mut app = MessengerApp::new(config, adapter);
 
@@ -51,7 +52,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut terminal = Terminal::new(backend)?;
 
     // Initialize keyboard handler
-    let mut keyboard_handler = cli_chat_rs::KeyboardHandler::new();
+    let keyboard_handler = cli_chat_rs::KeyboardHandler::new(shortcut_config);
 
     // UI state
     let mut selected_chat = 0;
@@ -248,6 +249,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                             input_message.clear();
                         }
                     }
+                    _ => {}
                 }
 
                 // Handle text input
@@ -276,7 +278,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     terminal.show_cursor()?;
 
     // Disconnect
-    app.adapter_mut().disconnect().await?;
+    app.adapter_mut().disconnect().await.map_err(|e| e as Box<dyn std::error::Error>)?;
     println!("Demo completed. Thank you for testing CLI Chat RS!");
 
     Ok(())
